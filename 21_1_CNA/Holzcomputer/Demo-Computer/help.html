@@ -1,0 +1,603 @@
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<title>Benutzerdokumentation</title>
+</head>
+
+<body>
+
+<h1><strong>Democomputer</strong></h1>
+<a HREF="#Einleitung">
+
+<p>Einleitung</a><br>
+<a HREF="#Installation">Installation</a><br>
+<a HREF="#Funktionsweise">Funktionsweise des Democomputers</a><br>
+<a HREF="#Komponenten">Die Komponenten</a><br>
+<a HREF="#Bedienung">Bedienung</a><br>
+<a HREF="#Befehlsliste">Befehlsliste</a><br>
+<a HREF="#Adressierung">Adressierung RAM</a><br>
+<a HREF="#Beispiele">Beispiele</a><br>
+<a HREF="#Unterschiede">Unterschiede zum Vorbild</a><br>
+</p>
+<a NAME="Einleitung"><b>
+
+<h2>Einleitung</h2>
+</b></a>
+
+<p>Dieses Java Applet wurde im Rahmen einer Fallstudie vom 30.4. - 8.5.1999 an der WIS
+Luzern von Michel Marti und Benno Kurmann programmiert. Es emuliert den 4-Bit Democomputer
+von Prof. Dyntar, Dozent am ZTL Horw. Dieser Computer zeigt auf einfache Art und Weise,
+wie ein Miniprogramm von einem Computer abgearbeitet wird. Anhand von L&auml;mpchen ist nach
+jedem Prozessortakt ersichtlich, welche Bits auf Bus, Register und externem Speicher
+gesetzt sind.<br>
+</p>
+
+<table BORDER="0" CELLSPACING="1" CELLPADDING="0" WIDTH="80%" ALIGN="middle">
+  <tr>
+    <td><img SRC="images/holzi.jpg"></td>
+  </tr>
+</table>
+
+<p><br>
+</p>
+
+<h2><a NAME="Installation"><strong>Installation</strong></a></h2>
+
+<p>Der Democomputer kann entweder in einem Java-f&auml;higen Browser oder via SUN's
+&quot;AppletViewer&quot; gestartet werden.
+
+<ol>
+  <li>Komprimierte Datei (democomp.zip) an beliebiger Stelle entpacken</li>
+  <li>Browser:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Datei
+    &quot;democomp.html&quot; &ouml;ffnen<br>
+    Appletviewer:&nbsp;&nbsp;&nbsp; cd &lt;democomp-Verzeichnis&gt;, appletviewer
+    democomp.html </li>
+</ol>
+
+<h2><a NAME="Funktionsweise">Funktionsweise des Democomputers</a></h2>
+
+<p>Der Democomputer arbeitet ein Programm ab, das im ROM gespeichert ist. Ein ROM-Wort ist
+4 Bit breit, das heisst es sind 2<sup>4</sup> = 16 Zust&auml;nde pro Wort m&ouml;glich. Dies
+entspricht auch genau dem implementierten <a href="#Befehlsliste">Befehlssatz</a>, der aus
+16 Befehlen besteht. <br>
+Im Democomputer wird zwischen Einwort- und Zweiwortbefehlen unterschieden:<br>
+
+<ul>
+  <li><strong>Einwortbefehl</strong> : Ben&ouml;tigt keine Argumente.</li>
+  <li><strong>Zweiwortbefehl</strong>: Ben&ouml;tigt noch ein Argument (Datenwort oder Adresse),
+    welches an der dem Befehl folgenden Adresse im ROM stehen muss.</li>
+</ul>
+
+<p>Nachdem ein Programm programmiert wurde und der Democomputer gestartet wird, holt sich
+die CPU den Befehl aus der ROM-Adresse 0 ins Instruktionsregister. Dieser Vorgang wird als
+&quot;Fetch&quot; bezeichnet. Anschliessend wird dieser Befehl ausgef&uuml;hrt, was als
+&quot;Execute&quot; bezeichnet wird. <br>
+Um einen Befehl abzuarbeiten, ben&ouml;tigt der Microprocessor (CPU) mehrere
+Prozessortaktzyklen. Im Democomputer gelten folgende Taktzyklen f&uuml;r die Ausf&uuml;hrung eines
+Befehls :<br>
+<br>
+1.a) Fetch-Phase : 4 Taktzyklen
+
+<ul>
+  <li>ROM-Adresse auf den Adressbus legen</li>
+  <li>Befehl aus dem ROM auf den Datenbus legen / Controlbus auf READ setzen</li>
+  <li>Befehl ins Instruktionsregister schreiben / Befehl dekodieren </li>
+  <li>Programm Counter um 1 erh&ouml;hen</li>
+</ul>
+
+<p>1.b) zweites Fetch, falls es sich um einen Zweiwortbefehl handelt : 3 Taktzyklen
+
+<ul>
+  <li>ROM-Adresse auf den Datenbus legen</li>
+  <li>Argument aus dem ROM auf den Datenbus legen und intern speichern</li>
+  <li>Programm Counter um 1 erh&ouml;hen</li>
+</ul>
+
+<p>2. Execute-Phase : 1 bis 3 Taktzyklen
+
+<ul>
+  <li>Abh&auml;ngig vom Befehl</li>
+</ul>
+
+<p><br>
+</p>
+
+<h2><strong><a NAME="Komponenten">Die Komponenten</a></strong></h2>
+
+<p><strong>Microprocessor</strong><br>
+Dieses Modul stellt eine einfache CPU dar. Sie besteht aus folgenden Elementen :
+
+<ul>
+  <li>Register 0 : Ein 4 Bit Datenregister, welches einen &Uuml;berlauf als &quot;Carry&quot;
+    anzeigt.</li>
+  <li>Register 1 : Ein 4 Bit Datenregister ohne Carry-Bit.</li>
+  <li>Instruction Register : Zeigt den Befehl, der momentan abgearbeitet wird.</li>
+  <li>Programm Counter : Zeigt die ROM-Adresse, welche als n&auml;chstes geholt werden soll. Der
+    Counter ist 5 Bit breit, es werden jedoch nur 4 ben&ouml;tigt.</li>
+  <li>Reset-Knopf : Setzt alle Komponenten, ausser ROM, RAM und IN, in den Ursprungszustand
+    zur&uuml;ck.</li>
+  <li>Clock-Knopf : CPU-Taktzyklen manuell geben</li>
+  <li>Auto Knopf : Legt fest, ob der CPU-Takt manuell (Clock-Knopf) oder automatisch abl&auml;uft.</li>
+</ul>
+
+<p><strong>ROM</strong><br>
+In diesem Modul kann mit der Maus eine Folge von maximal zehn 4-Bit Befehlen programmiert
+werden.<br>
+<br>
+<strong>RAM</strong><br>
+Das Modul besteht aus vier 4-Bit W&ouml;rtern, welche von der CPU zum Speichern von Daten
+benutzt werden k&ouml;nnen.<br>
+<br>
+<strong>I/O</strong><br>
+Im IN - Element kann mit der Maus ein Wort eingegeben werden, welches die CPU holen kann.<br>
+Das OUT-Element zeigt an, wenn die CPU ein Datenwort an den Out-Port des Democomputers
+gelegt hat.<br>
+<br>
+<strong>Bus</strong><br>
+Der Zustand der verschiedenen Busse wird am oberen und unteren Ende des CPU Moduls
+angezeigt.
+
+<ul>
+  <li>Datenbus : 4-Bit Bus, auf welchem Datenw&ouml;rter zwischen den Komponenten ausgetauscht
+    werden.</li>
+  <li>Adressbus : 5-Bit Bus, mit dem die Elemente in den verschiedenen Komponenten adressiert
+    werden.</li>
+  <li>Controlbus (Steuerbus) : 2-Bit Bus der steuert, ob ein Lese- oder Schreibzugriff
+    erfolgen soll.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2><strong><a NAME="Bedienung">Bedienung</a></strong></h2>
+
+<p>Vor dem Start m&uuml;ssen Sie das ROM programmieren. Benutzen Sie dazu die <a
+href="#Befehlsliste">Codes der Befehlsliste</a>. Sie programmieren das ROM, indem Sie mit
+der Maus auf die gew&uuml;nschten &quot;L&auml;mpchen&quot; klicken. Falls Ihr Programm den
+Input-Port anspricht, versichern Sie sich, dass Sie auch dort den gew&uuml;nschten Wert
+programmiert haben.<br>
+Das Programm k&ouml;nnen Sie manuell oder automatisch ablaufen lassen.<br>
+<br>
+- Automatisch : Klicken Sie auf den Auto-Knopf in der Microprocessor-Einheit<br>
+- Manuell : Klicken Sie auf den Clock-Knopf in der Microprocessor-Einheit. Mit jedem Klick
+wird der n&auml;chste Prozessortakt ausgef&uuml;hrt.<br>
+<br>
+Es ist jederzeit mitten in der Programmabarbeitung m&ouml;glich, die ROM-Programmierung zu
+&auml;ndern oder zwischen Auto und Manuell umzuschalten. Nachdem die letzte ROM Adresse
+ausgef&uuml;hrt wurde, springt die CPU automatisch wieder an ROM-Adresse 0.<br>
+Mit dem Reset-Knopf werden alle Elemente ausser ROM, RAM und Input-Port auf 0 gesetzt.<br>
+<br>
+Die Geschwindigkeit des Auto-Modus kann im HTML-File, welches das Applet startet, als
+Parameter eingestellt werden. &quot;Dalay value&quot; gibt die Wartezeit zwischen den
+Taktzyklen in Millisekunden an.<br>
+Als Beispiel eine Wartezeit von 200ms : <br>
+<br>
+</p>
+
+<pre>&lt;APPLET ARCHIVE=&quot;democomp.jar&quot;
+CODE=&quot;com.bastel.democomp.DemoComputer.class&quot;
+WIDTH=614 HEIGHT=400&gt;
+&lt;param name=Delay value=&quot;200&quot;&gt;
+&lt;/APPLET&gt;</pre>
+
+<p>&nbsp;</p>
+
+<h2><a NAME="Befehlsliste"><strong>Befehlsliste</strong></h2>
+
+<table BORDER="1" CELLSPACING="1" CELLPADDING="4" WIDTH="85%" ALIGN="middle">
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP"><strong>Mnemonic</strong></td>
+    <td WIDTH="9%" VALIGN="TOP"><strong>Code</strong></td>
+    <td WIDTH="13%" VALIGN="TOP"><strong>Anz. Worte</strong></td>
+    <td WIDTH="13%" VALIGN="TOP"><strong>CPU-Zyklen</strong></td>
+    <td WIDTH="50%" VALIGN="TOP"><strong>Beschreibung</strong></td>
+  </tr>
+  <tr>
+    <td VALIGN="TOP" COLSPAN="5" BGCOLOR="#C0C0C0">Datentransferbefehle:</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">MVI R0</td>
+    <td WIDTH="9%" VALIGN="TOP">0100</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">8</td>
+    <td WIDTH="50%" VALIGN="TOP">unmittelbar folgendes Wort in Register 0</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">MVI R1</td>
+    <td WIDTH="9%" VALIGN="TOP">0101</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">8</td>
+    <td WIDTH="50%" VALIGN="TOP">Unmittelbar folgendes Wort in Register 1</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">STO R0</td>
+    <td WIDTH="9%" VALIGN="TOP">0000</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">10</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 0 in RAM; </a><a HREF="#Adressierung">2. Wort
+    RAM-Adresse</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">STO R1</td>
+    <td WIDTH="9%" VALIGN="TOP">0001</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">10</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 1 in RAM, <a HREF="#Adressierung">2. Wort
+    RAM-Adresse</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">LD R0</td>
+    <td WIDTH="9%" VALIGN="TOP">0010</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">10</td>
+    <td WIDTH="50%" VALIGN="TOP">RAM in Register 0; <a HREF="#Adressierung">2. Wort
+    RAM-Adresse</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">LD R1</td>
+    <td WIDTH="9%" VALIGN="TOP">0011</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">10</td>
+    <td WIDTH="50%" VALIGN="TOP">RAM in Register 1; <a HREF="#Adressierung">2. Wort
+    RAM-Adresse</a></td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">MOV R1,R0</td>
+    <td WIDTH="9%" VALIGN="TOP">1001</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">5</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 0 in Register 1 kopieren</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">MOV R0,R1</td>
+    <td WIDTH="9%" VALIGN="TOP">1010</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">5</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 1 in Register 0 kopieren</td>
+  </tr>
+  <tr>
+    <td VALIGN="TOP" COLSPAN="5" BGCOLOR="#C0C0C0">Input-/Outputbefehle:</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">IN</td>
+    <td WIDTH="9%" VALIGN="TOP">1000</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">7</td>
+    <td WIDTH="50%" VALIGN="TOP">Input-Port in Register 0</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">OUT</td>
+    <td WIDTH="9%" VALIGN="TOP">1011</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">7</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 0 in Output-Port</td>
+  </tr>
+  <tr>
+    <td VALIGN="TOP" COLSPAN="5" BGCOLOR="#C0C0C0">Arithmetische Befehle:</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">ADD R1</td>
+    <td WIDTH="9%" VALIGN="TOP">1101</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">5</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 1 + Register 0 (ohne carry), Resultat in R0</td>
+  </tr>
+  <tr>
+    <td VALIGN="TOP" COLSPAN="5" BGCOLOR="#C0C0C0">Rotationsbefehle:</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">ASL</td>
+    <td WIDTH="9%" VALIGN="TOP">1110</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">5</td>
+    <td WIDTH="50%" VALIGN="TOP">Register 0 links schieben, &Uuml;berlauf in carry</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">RAR</td>
+    <td WIDTH="9%" VALIGN="TOP">1111</td>
+    <td WIDTH="13%" VALIGN="TOP">1</td>
+    <td WIDTH="13%" VALIGN="TOP">5</td>
+    <td WIDTH="50%" VALIGN="TOP">R0 rechts schieben, LSB in carry</td>
+  </tr>
+  <tr>
+    <td VALIGN="TOP" COLSPAN="5" BGCOLOR="#C0C0C0">Sprungbefehle:</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">LMP</td>
+    <td WIDTH="9%" VALIGN="TOP">0110</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">8</td>
+    <td WIDTH="50%" VALIGN="TOP">Sprung zu ROM-Adresse in 2. Wort</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">JC</td>
+    <td WIDTH="9%" VALIGN="TOP">0111</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">8</td>
+    <td WIDTH="50%" VALIGN="TOP">Sprung zu ROM-Adresse in 2. Wort wenn carry = 1</td>
+  </tr>
+  <tr>
+    <td WIDTH="15%" VALIGN="TOP">JNC</td>
+    <td WIDTH="9%" VALIGN="TOP">1111</td>
+    <td WIDTH="13%" VALIGN="TOP">2</td>
+    <td WIDTH="13%" VALIGN="TOP">8</td>
+    <td WIDTH="50%" VALIGN="TOP">Sprung zu ROM-Adresse in 2. Wort wenn carry = 0</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<h2><a NAME="Adressierung"><strong>Adressierung Ram</strong></a></h2>
+
+<p>Die RAM-Adressen im Democomputer sind 16-19. Diese Adressen lassen sich nicht mit 4 Bit
+abbilden und k&ouml;nnen folglich im ROM nicht als Argument &uuml;bergeben werden. Deshalb gelten
+f&uuml;r RAM-Adressen im ROM eigene Regeln :<br>
+<br>
+0000 - 0011 entsprechen den RAM-Adressen 16 - 19<br>
+</p>
+
+<p>&nbsp;</p>
+
+<h2><a NAME="Beispiele"><strong>Beispiele</strong></a></h2>
+
+<h3>Programm 1</h3>
+
+<p>kopiert ein Wort in Register 0 und schreibt dieses Wort anschliessend an die 2. Adresse
+im RAM<br>
+<br>
+</p>
+
+<table BORDER="0" CELLSPACING="1" CELLPADDING="0" WIDTH="80%" ALIGN="middle">
+  <tr>
+    <td><img SRC="images/beisp1.gif"></td>
+  </tr>
+</table>
+
+<p><br>
+</p>
+
+<table BORDER="1" CELLSPACING="1" CELLPADDING="4" WIDTH="85%" ALIGN="middle">
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP"><strong>ROM</strong></td>
+    <td WIDTH="16%" VALIGN="TOP"><strong>Beschreibung</strong></td>
+    <td WIDTH="8%" VALIGN="TOP"><strong>CPU-Zykus</strong></td>
+    <td WIDTH="58%" VALIGN="TOP"><strong>Erkl&auml;rung</strong></td>
+    <td WIDTH="9%" VALIGN="TOP">Phase</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">0100</td>
+    <td WIDTH="16%" VALIGN="TOP">Folgendes Wort in R0</td>
+    <td WIDTH="8%" VALIGN="TOP">1</td>
+    <td WIDTH="58%" VALIGN="TOP">Adresse 0 (aus dem Programm Counter) wird auf den Adressbus
+    gelegt. Chip select ROM leuchtet.</td>
+    <td WIDTH="9%" VALIGN="TOP" ROWSPAN="7"><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    fetch</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">2</td>
+    <td WIDTH="58%" VALIGN="TOP">Wert aus ROM-Adresse 0 wird auf den Datenbus gelegt (0100).
+    Contolbus wird auf READ gesetzt.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">3</td>
+    <td WIDTH="58%" VALIGN="TOP">Wort aus dem Datenbus wird ins Instruktionsregister kopiert.
+    Der Befehl wird dekodiert.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">4</td>
+    <td WIDTH="58%" VALIGN="TOP">Programm Counter wird um 1 erh&ouml;ht.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">0111</td>
+    <td WIDTH="16%" VALIGN="TOP">Datenwort f&uuml;r R0</td>
+    <td WIDTH="8%" VALIGN="TOP">5</td>
+    <td WIDTH="58%" VALIGN="TOP">Adresse 1 (aus dem Prg Counter) wird auf den Adressbus
+    gelegt.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">6</td>
+    <td WIDTH="58%" VALIGN="TOP">Wert aus ROM-Adresse 1 wird auf den Datenbus gelegt (0111).
+    CPU speichert Datenwort intern.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">7</td>
+    <td WIDTH="58%" VALIGN="TOP">Programm Counter wird um 1 erh&ouml;ht.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">8</td>
+    <td WIDTH="58%" VALIGN="TOP">Datenwort (0111) wird in Register 0 geschrieben.</td>
+    <td WIDTH="9%" VALIGN="TOP">execute</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">0000</td>
+    <td WIDTH="16%" VALIGN="TOP">R0 in RAM</td>
+    <td WIDTH="8%" VALIGN="TOP">1</td>
+    <td WIDTH="58%" VALIGN="TOP">Adresse 2 (aus dem Programm Counter) wird auf den Adressbus
+    gelegt. Chip select ROM leuchtet.</td>
+    <td WIDTH="9%" VALIGN="TOP" ROWSPAN="7"><br>
+    <br>
+    <br>
+    <br>
+    <br>
+    fetch</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">2</td>
+    <td WIDTH="58%" VALIGN="TOP">Wert aus ROM-Adresse 2 wird auf den Datenbus gelegt (0000).
+    Contolbus wird auf READ gesetzt.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">3</td>
+    <td WIDTH="58%" VALIGN="TOP">Wort aus dem Datenbus wird ins Instruktionsregister kopiert.
+    Der Befehl wird dekodiert.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">4</td>
+    <td WIDTH="58%" VALIGN="TOP">Programm Counter wird um 1 erh&ouml;ht.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">0001</td>
+    <td WIDTH="16%" VALIGN="TOP">RAM-Adresse</td>
+    <td WIDTH="8%" VALIGN="TOP">5</td>
+    <td WIDTH="58%" VALIGN="TOP">Adresse 3 (aus dem Prg Counter) wird auf den Adressbus
+    gelegt.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">6</td>
+    <td WIDTH="58%" VALIGN="TOP">Wert aus ROM-Adresse 3 wird auf den Datenbus gelegt (0001).
+    CPU speichert Datenwort intern.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">7</td>
+    <td WIDTH="58%" VALIGN="TOP">Programm Counter wird um 1 erh&ouml;ht.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">8</td>
+    <td WIDTH="58%" VALIGN="TOP">Die RAM-Adresse wird auf den Adressbus gelegt. Chip select
+    auf RAM.</td>
+    <td WIDTH="9%" VALIGN="TOP" ROWSPAN="3"><br>
+    execute</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">9</td>
+    <td WIDTH="58%" VALIGN="TOP">Die Daten aus R0 (0111) werden auf den Datenbus gelegt.</td>
+  </tr>
+  <tr>
+    <td WIDTH="9%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="16%" VALIGN="TOP">&nbsp;</td>
+    <td WIDTH="8%" VALIGN="TOP">10</td>
+    <td WIDTH="58%" VALIGN="TOP">Der Controlbus wird auf WRITE gesetzt. Das Datenwort wird in
+    RAM Adresse 17 geschrieben</td>
+  </tr>
+</table>
+
+<p><br>
+<br>
+</p>
+
+<h3>Programm 2</h3>
+
+<p>multipliziert den Wert am Input-Port solange mit 2, bis ein Register&uuml;berlauf eintritt.
+Dann erfolgt eine Division durch 2. Das Resultat wird in Register 1 gespeichert und ins
+RAM kopiert. Auf eine Aufspaltung in einzelne Prozessorzyklen wird verzichtet.<br>
+<br>
+</p>
+
+<table BORDER="0" CELLSPACING="1" CELLPADDING="0" WIDTH="80%" ALIGN="middle">
+  <tr>
+    <td><img SRC="images/beisp2.gif"></td>
+  </tr>
+</table>
+
+<p><br>
+</p>
+
+<table BORDER="1" CELLSPACING="1" CELLPADDING="4" WIDTH="85%" ALIGN="middle">
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP"><strong>ROM<br>
+    Adresse</strong></td>
+    <td WIDTH="11%" VALIGN="TOP"><strong>Befehl <br>
+    Im ROM</strong></td>
+    <td WIDTH="79%" VALIGN="TOP"><strong>Erkl&auml;rung</strong></td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">0</td>
+    <td WIDTH="11%" VALIGN="TOP">1000</td>
+    <td WIDTH="79%" VALIGN="TOP">Schreibt Wort an Input-Port in Register 0</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">1</td>
+    <td WIDTH="11%" VALIGN="TOP">1110</td>
+    <td WIDTH="79%" VALIGN="TOP">Schiebt alle Bits in Register 0 eine Stelle nach links. <br>
+    (Entspricht der Operation * 2)</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">2</td>
+    <td WIDTH="11%" VALIGN="TOP">1100</td>
+    <td WIDTH="79%" VALIGN="TOP">Wenn Carry-Bit = 0, springe zu ...</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">3</td>
+    <td WIDTH="11%" VALIGN="TOP">0001</td>
+    <td WIDTH="79%" VALIGN="TOP">... ROM Adresse 1</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">4</td>
+    <td WIDTH="11%" VALIGN="TOP">1111</td>
+    <td WIDTH="79%" VALIGN="TOP">Schiebt alle Bits in Register 0 eine Stelle nach rechts</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">5</td>
+    <td WIDTH="11%" VALIGN="TOP">1001</td>
+    <td WIDTH="79%" VALIGN="TOP">Kopiert Register 0 in Register 1</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">6</td>
+    <td WIDTH="11%" VALIGN="TOP">0001</td>
+    <td WIDTH="79%" VALIGN="TOP">Schreibt Register 1 an...</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">7</td>
+    <td WIDTH="11%" VALIGN="TOP">0000</td>
+    <td WIDTH="79%" VALIGN="TOP">...<a href="#Adressierung">RAM Adresse</a> 16</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">8</td>
+    <td WIDTH="11%" VALIGN="TOP">0110</td>
+    <td WIDTH="79%" VALIGN="TOP">Springt zu...</td>
+  </tr>
+  <tr>
+    <td WIDTH="10%" VALIGN="TOP">9</td>
+    <td WIDTH="11%" VALIGN="TOP">0000</td>
+    <td WIDTH="79%" VALIGN="TOP">...ROM Adresse 0 (Endlos Loop)</td>
+  </tr>
+</table>
+
+<p><br>
+<br>
+</p>
+
+<h2><strong><a NAME="Unterschiede">Unterschiede zum Vorbild</a></strong></h2>
+
+<ul>
+  <li>Der Programm Counter springt nach der ROM-Adresse 9 automatisch wieder auf 0. Im
+    Original wird gnadenlos bis 31 weitergez&auml;hlt, falls man mit einem JMP &uuml;ber Adresse 10
+    hinausspringt.</li>
+  <li>Ein Chipselect passiert automatisch, wenn eine entsprechende Adresse auf dem Adressbus
+    liegt. Wenn z.B. dem Befehl LD R0 unerlaubterweise eine IO Adresse mitgegeben wird, wird
+    die IO-Komponente sehr wohl selektiert, die Daten werden aber nicht ins Register
+    geschrieben. Im Original-Computer wird ein Chipselect RAM schon auf Grund des Befehls LD
+    R0 ausgef&uuml;hrt. </li>
+</ul>
+</body>
+</html>
