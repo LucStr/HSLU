@@ -16,6 +16,8 @@
 package ch.hslu.demo;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import ch.hslu.oop.exercises.DemoApp;
 import org.junit.jupiter.api.Test;
 
 /**

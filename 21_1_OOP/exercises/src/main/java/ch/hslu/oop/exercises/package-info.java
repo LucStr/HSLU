@@ -17,5 +17,5 @@
 /**
  * Demo-Package.
  */
-package ch.hslu.demo;
+package ch.hslu.oop.exercises;
 

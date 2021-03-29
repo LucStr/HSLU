@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.hslu.demo;
+package ch.hslu.oop.exercises;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Demo-Applikation für {@link ch.hslu.demo.Point}-Klasse.
+ * Demo-Applikation für {@link Point}-Klasse.
  */
 public final class DemoApp {
 

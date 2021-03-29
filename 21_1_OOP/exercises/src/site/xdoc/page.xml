@@ -19,11 +19,11 @@
 
     <properties>
         <title>OOP Maven Template</title>
-        <author email="roland.gisler@hslu.ch">Roland Gisler</author>
+        <author email="luca.strebel@stud.hslu.ch">Luca Strebel</author>
     </properties>
 
     <body>
-        <section name="OOP Maven Template">
+        <section name="OOP Exercises">
             <subsection name="Inhalt">
                 <p>
                     <macro name="toc">
@@ -34,10 +34,9 @@
                 </p>
             </subsection>
 
-            <subsection name="Template für einfache Java-Projekte">
+            <subsection name="Exercises that have been worked on during the module OOP">
                 <p>
-                    Dieses Projekt definiert ein einfaches, leeres Java-Projekt mit einem Maven-Build.
-                    Es kann für beliebige Projekte genutzt werden und dient als ein Template.
+                    This Project contains all exercises that have been worked on during OOP.
                 </p>
                 <p>
                     Details siehe in der Readme-Datei:
