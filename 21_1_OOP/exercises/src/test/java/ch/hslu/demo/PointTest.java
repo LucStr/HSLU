@@ -148,4 +148,28 @@ final class PointTest {
         final Point point2 = new Point(2, 1);
         assertNotEquals(point1, point2);
     }
+
+    @Test
+    void testMoveRelativeByNumber(){
+        final Point point = new Point(1, 2);
+        point.moveRelative(2, 1);
+
+        assertEquals(point, new Point(3, 3));
+    }
+
+    @Test
+    void testMoveRelativeByVector(){
+        final Point point = new Point(1, 2);
+        point.moveRelative(new Point(2, 1));
+
+        assertEquals(point, new Point(3, 3));
+    }
+
+    @Test
+    void testMoveRelativeByAngleAndLength(){
+        final Point point = new Point(1, 2);
+        point.moveRelativeByAngleAndLength(60, 1);
+
+        assertEquals(point, new Point(2, 3));
+    }
 }

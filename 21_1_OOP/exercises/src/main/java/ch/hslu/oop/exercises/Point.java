@@ -49,8 +49,8 @@ public final class Point {
      */
     private static final int QUADRANT_4 = 4;
 
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     /**
      * Konstruktor für Punkt mit Koordinaten.
@@ -60,6 +60,14 @@ public final class Point {
     public Point(final int x, final int y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Constructor to copy a point
+     * @param point
+     */
+    public Point(final Point point){
+        this(point.getX(), point.getY());
     }
 
     /**
@@ -102,6 +110,30 @@ public final class Point {
      */
     public int getY() {
         return y;
+    }
+
+    /**
+     * Moves The coordinates relative to the current coordinates
+     */
+    public void moveRelative(int x, int y){
+        this.x += x;
+        this.y += y;
+    }
+
+    /**
+     * Moves the coordinates with another point (used as vector).
+     * @param vector
+     */
+    public void moveRelative(Point vector){
+        this.moveRelative(vector.getX(), vector.getY());
+    }
+
+    public void moveRelativeByAngleAndLength(double angle, int length){
+        double radians = Math.toRadians(angle);
+        int x = (int) Math.round(Math.sin(radians) * length);
+        int y = (int) Math.round(Math.cos(radians) * length);
+
+        this.moveRelative(x, y);
     }
 
     /**
