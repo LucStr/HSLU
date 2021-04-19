@@ -2,7 +2,7 @@ package ch.hslu.oop.exercises.temperature;
 
 public class Mercury extends ChemicalElement {
     public Mercury() {
-        super("Hg", -38.83f, 356.73f);
+        super("Hg", "Quecksilber", -38.83f, 356.73f);
     }
 
     @Override

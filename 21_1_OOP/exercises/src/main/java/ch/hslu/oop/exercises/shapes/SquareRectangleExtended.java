@@ -1,6 +1,6 @@
 package ch.hslu.oop.exercises.shapes;
 
-public class SquareRectangleExtended extends Rectangle {
+public final class SquareRectangleExtended extends Rectangle {
     public SquareRectangleExtended(int x, int y, int width) {
         super(x, y, width, width);
     }

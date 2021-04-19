@@ -1,6 +1,6 @@
 package ch.hslu.oop.exercises.temperature;
 
-public class Temperature {
+public final class Temperature implements Comparable<Temperature> {
     private float value;
     public static float KelvinOffset = (float) 273.15;
 
@@ -13,6 +13,9 @@ public class Temperature {
     }
     public Temperature(float value, TemperatureType type){
         setValue(value, type);
+    }
+    public Temperature(Temperature temperature){
+        this(temperature.value);
     }
 
     public float getValue(TemperatureType type) {
@@ -52,12 +55,30 @@ public class Temperature {
         }
     }
 
-    public String getStateOfAggregationForElementByChemicalElement(ChemicalElement element){
+    public Aggregation getStateOfAggregationForElementByChemicalElement(ChemicalElement element){
         if(element.getHardToLiquid().getValue() > value){
-            return "hard";
+            return Aggregation.SOLID;
         }
 
-        return element.getLiquidToGas().getValue() > value ? "liquid" : "gas";
+        return element.getLiquidToGas().getValue() > value ? Aggregation.LIQUID : Aggregation.GAS;
+    }
+
+    @Override
+    public int compareTo(Temperature otherTemperature) {
+        return Float.compare(value, otherTemperature.value);
+    }
+
+    @Override
+    public String toString(){
+        return this.value + " Celsius";
+    }
+
+    public static float convertKelvinToCelsius(float kelvin){
+        return new Temperature(kelvin, TemperatureType.Kelvin).getValue();
+    }
+
+    public static float convertCelsiusToKelvin(float celsius){
+        return new Temperature(celsius, TemperatureType.Celsius).getValue(TemperatureType.Kelvin);
     }
 }
 

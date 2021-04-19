@@ -1,6 +1,6 @@
 package ch.hslu.oop.exercises.shapes;
 
-public class Circle extends Shape {
+public final class Circle extends Shape {
     private int diameter;
 
     public Circle(int x, int y, int diameter){
