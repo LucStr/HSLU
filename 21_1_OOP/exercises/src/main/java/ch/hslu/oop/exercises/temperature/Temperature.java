@@ -1,21 +1,33 @@
 package ch.hslu.oop.exercises.temperature;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Temperature implements Comparable<Temperature> {
     private float value;
     public static float KelvinOffset = (float) 273.15;
+    static Logger log = LogManager.getLogger(Temperature.class);
 
     public Temperature(){
         this.value = 20;
     }
 
-    public Temperature(float value) {
+    public Temperature(final float value) {
         this(value, TemperatureType.Celsius);
     }
-    public Temperature(float value, TemperatureType type){
+    public Temperature(final float value, TemperatureType type){
         setValue(value, type);
     }
-    public Temperature(Temperature temperature){
+    public Temperature(final Temperature temperature){
         this(temperature.value);
+    }
+
+    public static Temperature createFromCelsius(final float celsius){
+        return new Temperature(celsius);
+    }
+
+    public static Temperature createFromKelvin(final float kelvin){
+        return new Temperature(kelvin, TemperatureType.Kelvin);
     }
 
     public float getValue(TemperatureType type) {
@@ -38,21 +50,27 @@ public final class Temperature implements Comparable<Temperature> {
         return value;
     }
 
-    public void setValue(float value) {
+    private void setValue(final float value) {
         this.value = value;
     }
 
-    public void setValue(float value, TemperatureType type){
+    private void setValue(float value, TemperatureType type){
         switch (type){
-            case Celsius:
-                this.value = value;
-                break;
             case Kelvin:
-                this.value = value - KelvinOffset;
+                value = value - KelvinOffset;
                 break;
             case Fahrenheit:
-                this.value = (value - 32) / 1.8f;
+                value = (value - 32) / 1.8f;
         }
+
+        if(value < -KelvinOffset){
+            var exception = new TemperatureBelowZeroKelvinException();
+            log.error(exception);
+
+            throw exception;
+        }
+
+        this.value = value;
     }
 
     public Aggregation getStateOfAggregationForElementByChemicalElement(ChemicalElement element){

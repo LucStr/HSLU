@@ -38,14 +38,6 @@ class TemperatureTest {
     }
 
     @Test
-    void testSetValue() {
-        var t = new Temperature(5);
-        t.setValue(10);
-
-        assertEquals(10, t.getValue());
-    }
-
-    @Test
     void convertKelvinToCelsius() {
         assertEquals(-263.15f, Temperature.convertKelvinToCelsius(10));
 
@@ -66,5 +58,19 @@ class TemperatureTest {
         list.add(new Temperature(10f));
 
         assertEquals(maxTemp, Collections.max(list));
+    }
+
+    @Test
+    void exceptionForTemperatureBelowKelvin(){
+        Exception thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> new Temperature(-1, TemperatureType.Kelvin),
+                "Expected Constructor to throw if temperature below 0 Kelvin is given"
+        );
+    }
+
+    @Test
+    void noExceptionForTemperatureAtZeroKelvin(){
+        new Temperature(0, TemperatureType.Kelvin);
     }
 }
