@@ -54,7 +54,7 @@ public final class Temperature implements Comparable<Temperature> {
         this.value = value;
     }
 
-    private void setValue(float value, TemperatureType type){
+    private void setValue(float value, TemperatureType type) throws TemperatureBelowZeroKelvinException{
         switch (type){
             case Kelvin:
                 value = value - KelvinOffset;
