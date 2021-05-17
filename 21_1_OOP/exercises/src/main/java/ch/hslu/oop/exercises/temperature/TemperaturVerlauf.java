@@ -4,7 +4,11 @@ import java.util.*;
 
 public class TemperaturVerlauf extends ArrayList<Temperature> {
     private List<TemperatureEventHandler> minEventListeners = new ArrayList<TemperatureEventHandler>();
-    private List<TemperatureEventHandler> maxEventListeners = new ArrayList<TemperatureEventHandler>();;
+    private List<TemperatureEventHandler> maxEventListeners = new ArrayList<TemperatureEventHandler>();
+
+    public boolean add(float temperature){
+        return add(new Temperature(temperature));
+    }
 
     @Override
     public boolean add(Temperature temperature){
