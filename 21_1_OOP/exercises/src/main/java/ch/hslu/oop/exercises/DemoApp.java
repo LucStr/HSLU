@@ -15,15 +15,16 @@
  */
 package ch.hslu.oop.exercises;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Demo-Applikation für {@link Point}-Klasse.
  */
 public final class DemoApp {
 
-    private static final Logger LOGGER = LogManager.getLogger(DemoApp.class);
+    //private static final Logger LOGGER = LogManager.getLogger(DemoApp.class);
 
     /** X-Wert. Beispiel. */
     private static final int COR_X = 2;
@@ -44,6 +45,6 @@ public final class DemoApp {
     public static void main(final String[] args) {
         final Point point = new Point(COR_X, COR_Y);
         final int quadrant = point.getQuadrant();
-        LOGGER.info("{} befindet sich in Quadrant: {}", point, quadrant);
+        //LOGGER.info("{} befindet sich in Quadrant: {}", point, quadrant);
     }
 }
