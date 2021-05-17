@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 public class Motor extends BaseSubscription implements Switchable {
     private int rpm;
     private MotorState motorState;
+    public static int RPM_WHEN_ON = 100;
 
     public Motor(){
         motorState = MotorState.OFF;
@@ -36,7 +37,7 @@ public class Motor extends BaseSubscription implements Switchable {
 
     @Override
     public void switchOn() {
-        setRpm(100);
+        setRpm(RPM_WHEN_ON);
         setMotorState(MotorState.ON);
     }
 

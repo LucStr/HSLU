@@ -14,6 +14,10 @@ public class Car implements Switchable{
         motor = new Motor();
         leftLight = new Light();
         rightLight = new Light();
+
+        motor.addPropertyChangeListener(new MotorEventHandler());
+        leftLight.addPropertyChangeListener(new LoggingEventHandler());
+        rightLight.addPropertyChangeListener(new LoggingEventHandler());
     }
 
     @Override
@@ -38,11 +42,7 @@ public class Car implements Switchable{
         return !state;
     }
 
-    private class MotorEventListener implements PropertyChangeListener {
+    private class MotorEventHandler extends LoggingEventHandler {
 
-        @Override
-        public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-
-        }
     }
 }

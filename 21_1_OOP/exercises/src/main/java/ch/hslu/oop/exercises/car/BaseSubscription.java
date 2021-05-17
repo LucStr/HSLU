@@ -2,10 +2,11 @@ package ch.hslu.oop.exercises.car;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaseSubscription implements Subscribable{
-    private List<PropertyChangeListener> listenerList;
+    private List<PropertyChangeListener> listenerList = new ArrayList<PropertyChangeListener>();
 
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
