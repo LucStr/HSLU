@@ -2,6 +2,8 @@ package ch.hslu.ad.exercise.d1;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class StringStackableTest {
     @Test
     void testEmptyStackOnCreation() {

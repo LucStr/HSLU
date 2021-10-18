@@ -52,11 +52,14 @@ public final class Canvas {
      * @return singleton Canvas object.
      */
     public static Canvas getCanvas() {
-        if (canvasSingleton == null) {
-            canvasSingleton = new Canvas("Ball Demo", 600, 400,
-                    Color.white);
+        synchronized (Canvas.class){
+            if (canvasSingleton == null) {
+                canvasSingleton = new Canvas("Ball Demo", 600, 400,
+                        Color.white);
+            }
+            canvasSingleton.setVisible(true);
         }
-        canvasSingleton.setVisible(true);
+
         return canvasSingleton;
     }
 
