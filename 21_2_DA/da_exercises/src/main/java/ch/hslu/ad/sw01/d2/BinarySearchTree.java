@@ -3,32 +3,69 @@ package ch.hslu.ad.sw01.d2;
 import jdk.jshell.spi.ExecutionControl;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearchable<K, V> {
     private BinarySearchNode<K, V> root;
 
-    private BinarySearchNode<K, V> searchNode(K key){
-        var current = root;
+    private List<BinarySearchNode<K, V>> searchPath(K key){
+        var path = new ArrayList<BinarySearchNode<K,V>>();
+        path.add(root);
+
         int comparison = 1;
+        var current = root;
         while(comparison != 0 && current != null){
             comparison = current.getKey().compareTo(key);
             current = comparison > 0 ? current.getRightNode() : comparison < 0 ? current.getLeftNode() : current;
+            if(comparison != 0){
+                path.add(current);
+            }
         }
 
         if(current == null){
             throw new IllegalArgumentException("Key" + key.toString() + " doesn't exist in collection");
         }
 
-        return current;
+        return path;
     }
 
     @Override
     public V search(K key) {
-        return searchNode(key).getValue();
+        var path = searchPath(key);
+
+        return path.get(path.size() - 1).getValue();
+    }
+
+    private BinarySearchNode<K, V> getLeftMostItem(BinarySearchNode<K, V> node){
+        var previous = node;
+        while(node.getLeftNode() != null){
+            node = node.getLeftNode();
+        }
+
+        return previous;
+    }
+
+    private void removeRoot(){
+        if(root.getLeftNode() != null && root.getRightNode() != null){
+            root = getLeftMostItem(root.getRightNode());
+        } else if(root.getLeftNode() != null){
+            root = root.getLeftNode();
+        } else if(root.getRightNode() != null){
+            root = root.getRightNode();
+        }
     }
 
     @Override
     public void remove(K key) {
+        var path = searchPath(key);
+        var target = path.get(path.size() - 1);
+        if(path.size() == 1){
+            removeRoot();
+        } else {
+            //removeChildN
+        }
+
         throw new IllegalArgumentException("Hasn't been implemented.");
     }
 

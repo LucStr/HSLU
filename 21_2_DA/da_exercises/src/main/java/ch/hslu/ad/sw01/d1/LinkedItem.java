@@ -1,7 +1,5 @@
 package ch.hslu.ad.sw01.d1;
 
-import java.util.Iterator;
-
 public class LinkedItem<T> {
     private final T item;
     private LinkedItem<T> nextItem;

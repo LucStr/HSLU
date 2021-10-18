@@ -92,7 +92,7 @@ class BinarySearchTreeTest {
 
         tree.add(1, "Test");
         assertEquals("Test", tree.search(1));
-        tree.add(1, "Test2");
+        tree.addOrUpdate(1, "Test2");
         assertEquals("Test2", tree.search(1));
     }
 

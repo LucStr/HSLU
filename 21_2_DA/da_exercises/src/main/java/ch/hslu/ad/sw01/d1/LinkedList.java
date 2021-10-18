@@ -1,15 +1,19 @@
 package ch.hslu.ad.sw01.d1;
 
 public class LinkedList<T> {
-    private LinkedItem<T> start;
+    private LinkedItem<T> head;
+
+    public LinkedList(){
+        head = null;
+    }
 
     public LinkedList(T[] array){
         if(array.length == 0){
             throw new IllegalArgumentException("The Array has to contain at least one item");
         }
 
-        start = new LinkedItem(array[0]);
-        var current = start;
+        head = new LinkedItem(array[0]);
+        var current = head;
         for (var i = 1; i < array.length; i++) {
             var next = new LinkedItem(array[i]);
             current.setNextItem(next);
@@ -29,12 +33,12 @@ public class LinkedList<T> {
     }
 
     public boolean remove(T item){
-        if(start.getItem() == item){
-            start = start.getNextItem();
+        if(head.getItem() == item){
+            head = head.getNextItem();
             return true;
         }
 
-        LinkedItem<T> previous = start;
+        LinkedItem<T> previous = head;
         while (previous.getNextItem() != null){
             var next = previous.getNextItem();
             if(next.getItem() == item){
@@ -48,11 +52,11 @@ public class LinkedList<T> {
     }
 
     public void add(T item){
-        start = new LinkedItem<>(item, start);
+        head = new LinkedItem<>(item, head);
     }
 
 
     public LinkedItemIterator<T> getIterator() {
-        return new LinkedItemIterator(start);
+        return new LinkedItemIterator(head);
     }
 }
