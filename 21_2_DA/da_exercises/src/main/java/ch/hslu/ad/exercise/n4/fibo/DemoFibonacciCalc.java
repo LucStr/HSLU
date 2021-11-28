@@ -18,6 +18,8 @@ package ch.hslu.ad.exercise.n4.fibo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ForkJoinPool;
+
 /**
  * Codevorlage für die Verwendung von RecursiveTask mit einem Fork-Join-Pool.
  */
@@ -65,15 +67,22 @@ public final class DemoFibonacciCalc {
     public static void main(final String[] args) {
         final int n = 42;
         final FibonacciTask task = new FibonacciTask(n);
+        final ForkJoinPool pool = new ForkJoinPool();
         LOG.info("fibo({}) start...", n);
-        long result = task.invoke();
+        long startTime = System.currentTimeMillis();
+        long result = pool.invoke(task);
+        long endTime = System.currentTimeMillis();
         LOG.info("Conc. recursive = {}", result);
-        LOG.info("Conc. recursive : {} msec.", '?');
+        LOG.info("Conc. recursive : {} msec.", endTime - startTime);
+        startTime = System.currentTimeMillis();
         result = fiboIterative(n);
+        endTime = System.currentTimeMillis();
         LOG.info("Func. iterative = {}", result);
-        LOG.info("Func. iterative : {} msec.", '?');
+        LOG.info("Func. iterative : {} msec.", endTime - startTime);
+        startTime = System.currentTimeMillis();
         result = fiboRecursive(n);
+        endTime = System.currentTimeMillis();
         LOG.info("Func. recursive = {}", result);
-        LOG.info("Func. recursive : {} sec.", '?');
+        LOG.info("Func. recursive : {} sec.", endTime - startTime);
     }
 }

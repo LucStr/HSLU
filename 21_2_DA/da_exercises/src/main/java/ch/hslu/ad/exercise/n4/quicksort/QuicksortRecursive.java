@@ -30,6 +30,22 @@ public class QuicksortRecursive {
         QuicksortRecursive.quicksort(array, 0, array.length - 1);
     }
 
+    private static void movePivotToBack(final int[] array, final int startIdx, final int endIdx){
+        final int centerIdx = (endIdx - startIdx) / 2 + startIdx;
+
+        if(array[startIdx] > array[endIdx]){
+            exchange(array, startIdx, endIdx);
+        }
+
+        if(array[startIdx] > array[centerIdx]){
+            exchange(array, startIdx, centerIdx);
+        }
+
+        if(array[endIdx] > array[centerIdx]){
+            exchange(array, centerIdx, endIdx);
+        }
+    }
+
     /**
      * Recursive quicksort logic.
      *
@@ -37,8 +53,16 @@ public class QuicksortRecursive {
      * @param startIdx start index of the array.
      * @param endIdx end index of the array.
      */
-    public static void quicksort(int[] array, int startIdx, int endIdx) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static void quicksort(final int[] array, final int startIdx, final int endIdx) {
+        if(startIdx >= endIdx){
+            return;
+        }
+
+        movePivotToBack(array, startIdx, endIdx);
+        final int partition = partition(array, startIdx, endIdx);
+
+        quicksort(array, startIdx, partition - 1);
+        quicksort(array, partition + 1, endIdx);
     }
 
     /**
@@ -46,12 +70,29 @@ public class QuicksortRecursive {
      * while right side contains elements greater than pivot.
      *
      * @param array array to partitioned.
-     * @param left lower bound of the array.
-     * @param right upper bound of the array.
+     * @param startIdx lower bound of the array.
+     * @param endIdx upper bound of the array.
      * @return the partition index.
      */
-    public static int partition(int[] array, int left, int right) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static int partition(final int[] array, final int startIdx, final int endIdx) {
+        final int pivot = array[endIdx];
+        int down = endIdx;
+        int up = startIdx - 1;
+
+        while(up < down){
+            while (array[++up] < pivot);
+            while (down > 0 && array[--down] > pivot);
+
+            if(up >= down){
+                break;
+            }
+
+            exchange(array, up, down);
+        }
+
+        exchange(array, endIdx, up);
+
+        return up;
     }
 
     private static void exchange(final int[] array, final int i, final int j) {

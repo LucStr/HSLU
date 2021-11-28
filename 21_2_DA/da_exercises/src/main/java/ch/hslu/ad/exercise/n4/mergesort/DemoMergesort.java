@@ -43,24 +43,30 @@ public final class DemoMergesort {
         final int size = 300_000;
         final int[] array = new int[size];
         final ForkJoinPool pool = new ForkJoinPool();
+
         RandomInitTask initTask = new RandomInitTask(array, 100);
         pool.invoke(initTask);
         SumTask sumTask = new SumTask(array);
         long result = pool.invoke(sumTask);
         LOG.info("Init. Checksum  : {}", result);
+
         final MergesortTask sortTask = new MergesortTask(array);
         pool.invoke(sortTask);
         LOG.info("Conc. Mergesort : {} sec.", '?');
+
         sumTask = new SumTask(array);
         result = pool.invoke(sumTask);
         LOG.info("Merge Checksum  : {}", result);
+
         initTask = new RandomInitTask(array, 100);
         pool.invoke(initTask);
         sumTask = new SumTask(array);
         result = pool.invoke(sumTask);
         LOG.info("Init. checksum  : {}", result);
+
         MergesortRecursive.mergeSort(array);
         LOG.info("MergesortRec.   : {} sec.", '?');
+
         sumTask = new SumTask(array);
         result = pool.invoke(sumTask);
         LOG.info("Sort checksum   : {}", result);

@@ -38,14 +38,16 @@ public final class DemoFindFile {
      * @param args not used.
      */
     public static void main(String[] args) {
-        final String search = "test.properties";
+        final String search = ".gitignore";
         final File rootDir = new File(System.getProperty("user.home"));
         LOG.info("Start searching '{}' recurive in '{}'", search, rootDir);
-        FindFile.findFile(search, rootDir);
+        //FindFile.findFile(search, rootDir);
         LOG.info("Found in {} msec.", '?');
         LOG.info("Find '{}' concurrent in '{}'", search, rootDir);
         final FindFileTask root = new FindFileTask(search, rootDir);
-        LOG.info(root.invoke());
+        var result = root.invoke();
+        LOG.info(result);
+        LOG.info(root.getRawResult());
         LOG.info("Found in {} msec.", '?');
     }
 }
